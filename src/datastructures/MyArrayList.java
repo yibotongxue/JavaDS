@@ -137,7 +137,12 @@ public class MyArrayList<T> implements MyList<T> {
      */
     @Override
     public int getPosition(T value) {
-        return 0;
+        for (int i = 0; i < current_length; i++) {
+            if (values[i] == value) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
