@@ -6,6 +6,8 @@ package datastructures;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Iterator;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MyArrayListTest {
@@ -122,5 +124,38 @@ class MyArrayListTest {
         for (int i = 0; i < 20; i++) {
             assertEquals(i, list.getValue(i), "Value should match the appended order.");
         }
+    }
+
+    @Test
+    public void testIterator() {
+        // 创建一个 MyArrayList 实例并添加一些元素
+        MyArrayList<Integer> list = new MyArrayList<>();
+        list.append(1);
+        list.append(2);
+        list.append(3);
+
+        // 使用 for-each 循环遍历 list 并检查元素
+        int[] expected = {1, 2, 3};
+        int index = 0;
+
+        for (Integer val : list) {
+            assertEquals(expected[index++], val);
+        }
+
+        // 获取迭代器并遍历所有元素
+        Iterator<Integer> iterator = list.iterator();
+
+        // 确保迭代器抛出 NoSuchElementException 异常
+        assertTrue(iterator.hasNext());  // 应该还有第一个元素
+        iterator.next();  // 消耗第一个元素
+
+        assertTrue(iterator.hasNext());  // 还有第二个元素
+        iterator.next();  // 消耗第二个元素
+
+        assertTrue(iterator.hasNext());  // 还有第三个元素
+        iterator.next();  // 消耗第三个元素
+
+        // 此时没有更多元素了，调用 next() 应该抛出 NoSuchElementException
+        assertThrows(java.util.NoSuchElementException.class, iterator::next);
     }
 }

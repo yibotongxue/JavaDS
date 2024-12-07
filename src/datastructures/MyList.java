@@ -4,7 +4,7 @@ package datastructures;
  * A generic list interface providing basic list operations.
  * @param <T>
  */
-public interface MyList<T> {
+public interface MyList<T> extends Iterable<T> {
     /**
      * Clears all elements from the list.
      */

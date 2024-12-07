@@ -1,8 +1,10 @@
 package datastructures;
 
+import java.util.Iterator;
+
 public class MyArrayList<T> implements MyList<T> {
     private T[] values;
-    private int current_length;
+    private int size;
 
     /**
      * The constructor of array list.
@@ -10,7 +12,7 @@ public class MyArrayList<T> implements MyList<T> {
     @SuppressWarnings("unchecked")
     public MyArrayList() {
         values = (T[]) new Object[8];
-        current_length = 0;
+        size = 0;
     }
 
     /**
@@ -19,7 +21,7 @@ public class MyArrayList<T> implements MyList<T> {
     @SuppressWarnings("unchecked")
     @Override
     public void clear() {
-        current_length = 0;
+        size = 0;
         values = (T[]) new Object[8];
     }
 
@@ -30,7 +32,7 @@ public class MyArrayList<T> implements MyList<T> {
     @SuppressWarnings("unchecked")
     private void resize(int newSize) {
         T[] temp = (T[]) new Object[newSize];
-        System.arraycopy(values, 0, temp, 0, current_length);
+        System.arraycopy(values, 0, temp, 0, size);
         values = temp;
     }
 
@@ -41,7 +43,7 @@ public class MyArrayList<T> implements MyList<T> {
      */
     @Override
     final public boolean isEmpty() {
-        return current_length == 0;
+        return size == 0;
     }
 
     /**
@@ -51,10 +53,10 @@ public class MyArrayList<T> implements MyList<T> {
      */
     @Override
     public void append(T value) {
-        if (current_length == values.length) {
-            resize(current_length * 2);
+        if (size == values.length) {
+            resize(size * 2);
         }
-        values[current_length++] = value;
+        values[size++] = value;
     }
 
     /**
@@ -66,17 +68,17 @@ public class MyArrayList<T> implements MyList<T> {
      */
     @Override
     public void insert(int position, T value) {
-        if (position < 0 || position > current_length) {
+        if (position < 0 || position > size) {
             throw new IndexOutOfBoundsException("Position out of bounds");
         }
-        if (current_length == values.length) {
-            resize(2 * current_length);
+        if (size == values.length) {
+            resize(2 * size);
         }
-        for (int index = current_length; index > position; index--) {
+        for (int index = size; index > position; index--) {
             values[index] = values[index - 1];
         }
         values[position] = value;
-        current_length++;
+        size++;
     }
 
     /**
@@ -88,15 +90,15 @@ public class MyArrayList<T> implements MyList<T> {
      */
     @Override
     public T delete(int position) {
-        if (position < 0 || position >= current_length) {
+        if (position < 0 || position >= size) {
             throw new IndexOutOfBoundsException("Position out of bounds");
         }
         T temp = values[position];
-        for (int index = position; index < current_length - 1; index++) {
+        for (int index = position; index < size - 1; index++) {
             values[index] = values[index + 1];
         }
-        current_length--;
-        if (values.length >= 16 && current_length < values.length / 4) {
+        size--;
+        if (values.length >= 16 && size < values.length / 4) {
             resize(values.length / 2);
         }
         return temp;
@@ -111,7 +113,7 @@ public class MyArrayList<T> implements MyList<T> {
      */
     @Override
     final public T getValue(int position) {
-        if (position < 0 || position >= current_length) {
+        if (position < 0 || position >= size) {
             throw new IndexOutOfBoundsException("Position out of bounds");
         }
         return values[position];
@@ -126,7 +128,7 @@ public class MyArrayList<T> implements MyList<T> {
      */
     @Override
     public void setValue(int position, T value) {
-        if (position < 0 || position >= current_length) {
+        if (position < 0 || position >= size) {
             throw new IndexOutOfBoundsException("Position out of bounds");
         }
         values[position] = value;
@@ -140,7 +142,7 @@ public class MyArrayList<T> implements MyList<T> {
      */
     @Override
     public int getPosition(T value) {
-        for (int i = 0; i < current_length; i++) {
+        for (int i = 0; i < size; i++) {
             if (values[i] == value) {
                 return i;
             }
@@ -155,6 +157,32 @@ public class MyArrayList<T> implements MyList<T> {
      */
     @Override
     final public int getSize() {
-        return current_length;
+        return size;
+    }
+
+    /**
+     * Returns an iterator over elements of type {@code T}.
+     *
+     * @return an Iterator.
+     */
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<>() {
+
+            private int index = 0;
+
+            @Override
+            public boolean hasNext() {
+                return index < size;
+            }
+
+            @Override
+            public T next() {
+                if (!hasNext()) {
+                    throw new java.util.NoSuchElementException();
+                }
+                return values[index++];
+            }
+        };
     }
 }
