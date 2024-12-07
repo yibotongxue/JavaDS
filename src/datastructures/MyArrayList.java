@@ -7,6 +7,7 @@ public class MyArrayList<T> implements MyList<T> {
     /**
      * The constructor of array list.
      */
+    @SuppressWarnings("unchecked")
     public MyArrayList() {
         values = (T[]) new Object[8];
         current_length = 0;
@@ -15,6 +16,7 @@ public class MyArrayList<T> implements MyList<T> {
     /**
      * Clears all elements from the list.
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void clear() {
         current_length = 0;
@@ -25,6 +27,7 @@ public class MyArrayList<T> implements MyList<T> {
      * Resize the array to newSize.
      * @param newSize The new size of the array.
      */
+    @SuppressWarnings("unchecked")
     private void resize(int newSize) {
         T[] temp = (T[]) new Object[newSize];
         System.arraycopy(values, 0, temp, 0, current_length);
