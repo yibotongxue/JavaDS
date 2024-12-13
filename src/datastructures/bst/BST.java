@@ -1,7 +1,7 @@
 package datastructures.bst;
 
 public class BST<T extends Comparable<T>> {
-    protected Node<T> root;
+    Node<T> root;
 
     protected static class Node<T> {
         T value;
@@ -82,7 +82,7 @@ public class BST<T extends Comparable<T>> {
         return node.value.equals(value);
     }
 
-    private boolean less_than(T lhs, T rhs) {
+    protected boolean less_than(T lhs, T rhs) {
         return lhs.compareTo(rhs) < 0;
     }
 }
