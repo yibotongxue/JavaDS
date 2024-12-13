@@ -88,6 +88,8 @@ public class AVLTree<T extends Comparable<T>> extends BST<T> {
         Node<T> temp = left_child.getCastRight();
         left_child.right = node;
         node.left = temp;
+        node.updateHeightAndBalanceFactor();
+        left_child.updateHeightAndBalanceFactor();
         return left_child;
     }
 
@@ -97,6 +99,8 @@ public class AVLTree<T extends Comparable<T>> extends BST<T> {
         Node<T> temp = right_child.getCastLeft();
         right_child.left = node;
         node.right = temp;
+        node.updateHeightAndBalanceFactor();
+        right_child.updateHeightAndBalanceFactor();
         return right_child;
     }
 

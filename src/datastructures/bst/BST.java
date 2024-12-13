@@ -12,6 +12,18 @@ public class BST<T extends Comparable<T>> {
             this.value = value;
             this.left = this.right = null;
         }
+
+        public Node<T> getLeft() {
+            return left;
+        }
+
+        T getValue() {
+            return value;
+        }
+
+        public Node<T> getRight() {
+            return right;
+        }
     }
 
     public BST() {

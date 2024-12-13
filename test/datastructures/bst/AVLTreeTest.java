@@ -102,4 +102,108 @@ public class AVLTreeTest {
         traverse((AVLTree.Node<Integer>) node.right, value, count);
     }
 
+    @Test
+    public void testLeftLeftRotation() {
+        AVLTree<Integer> tree = new AVLTree<>();
+        tree.insert(30);  // 根节点
+        tree.insert(20);  // 插入 20，树不平衡
+        tree.insert(10);  // 插入 10，触发左左旋转
+
+        // 验证树的结构
+        assertTrue(tree.search(10));
+        assertTrue(tree.search(20));
+        assertTrue(tree.search(30));
+
+        // 此时树应该已经平衡，根节点应该是 20
+        AVLTree.Node<Integer> root = (AVLTree.Node<Integer>) tree.root;
+        assertEquals(Integer.valueOf(20), root.getValue());
+        assertEquals(Integer.valueOf(10), root.getLeft().getValue());
+        assertEquals(Integer.valueOf(30), root.getRight().getValue());
+
+        assertTrue(tree.isAVLTree());
+    }
+
+    @Test
+    public void testLeftRightRotation() {
+        AVLTree<Integer> tree = new AVLTree<>();
+        tree.insert(30);  // 根节点
+        tree.insert(10);  // 插入 10，树不平衡
+        tree.insert(20);  // 插入 20，触发左-右双旋转
+
+        // 验证树的结构
+        assertTrue(tree.search(10));
+        assertTrue(tree.search(20));
+        assertTrue(tree.search(30));
+
+        // 此时树应该已经平衡，根节点应该是 20
+        AVLTree.Node<Integer> root = (AVLTree.Node<Integer>) tree.root;
+        assertEquals(Integer.valueOf(20), root.getValue());
+        assertEquals(Integer.valueOf(10), root.getLeft().getValue());
+        assertEquals(Integer.valueOf(30), root.getRight().getValue());
+
+        // 验证 AVL 树是否平衡
+        assertTrue(tree.isAVLTree());
+    }
+
+    @Test
+    public void testRightRightRotation() {
+        AVLTree<Integer> tree = new AVLTree<>();
+        tree.insert(10);  // 根节点
+        tree.insert(20);  // 插入 20，树不平衡
+        tree.insert(30);  // 插入 30，触发右右旋转
+
+        // 验证树的结构
+        assertTrue(tree.search(10));
+        assertTrue(tree.search(20));
+        assertTrue(tree.search(30));
+
+        // 此时树应该已经平衡，根节点应该是 20
+        AVLTree.Node<Integer> root = (AVLTree.Node<Integer>) tree.root;
+        assertEquals(Integer.valueOf(20), root.getValue());
+        assertEquals(Integer.valueOf(10), root.getLeft().getValue());
+        assertEquals(Integer.valueOf(30), root.getRight().getValue());
+
+        // 验证 AVL 树是否平衡
+        assertTrue(tree.isAVLTree());
+    }
+
+    @Test
+    public void testRightLeftRotation() {
+        AVLTree<Integer> tree = new AVLTree<>();
+        tree.insert(10);  // 根节点
+        tree.insert(30);  // 插入 30，树不平衡
+        tree.insert(20);  // 插入 20，触发右-左双旋转
+
+        // 验证树的结构
+        assertTrue(tree.search(10));
+        assertTrue(tree.search(20));
+        assertTrue(tree.search(30));
+
+        // 此时树应该已经平衡，根节点应该是 20
+        AVLTree.Node<Integer> root = (AVLTree.Node<Integer>) tree.root;
+        assertEquals(Integer.valueOf(20), root.getValue());
+        assertEquals(Integer.valueOf(10), root.getLeft().getValue());
+        assertEquals(Integer.valueOf(30), root.getRight().getValue());
+
+        // 验证 AVL 树是否平衡
+        assertTrue(tree.isAVLTree());
+    }
+
+    @Test
+    public void testInsertLargeNumberOfNodes() {
+        AVLTree<Integer> tree = new AVLTree<>();
+
+        // 插入大量数据
+        for (int i = 1; i <= 1000; i++) {
+            tree.insert(i);
+        }
+
+        // 验证树是否平衡
+        assertTrue(tree.isAVLTree());
+
+        // 验证是否能够查找所有插入的节点
+        for (int i = 1; i <= 1000; i++) {
+            assertTrue(tree.search(i));
+        }
+    }
 }
