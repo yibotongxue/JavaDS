@@ -206,4 +206,176 @@ public class AVLTreeTest {
             assertTrue(tree.search(i));
         }
     }
+
+    @Test
+    public void testDeleteLeafNode() {
+        AVLTree<Integer> tree = new AVLTree<>();
+        tree.insert(10);
+        tree.insert(20);
+        tree.insert(5);
+
+        // 删除叶子节点
+        tree.delete(5);
+
+        // 验证删除结果
+        assertFalse(tree.search(5));
+        assertTrue(tree.search(10));
+        assertTrue(tree.search(20));
+        assertTrue(tree.isAVLTree()); // 确保树仍然是AVL树
+    }
+
+    @Test
+    public void testDeleteNodeWithOneChild() {
+        AVLTree<Integer> tree = new AVLTree<>();
+        tree.insert(10);
+        tree.insert(20);
+        tree.insert(5);
+        tree.insert(3);
+
+        // 删除只有一个子节点的节点
+        tree.delete(5);
+
+        // 验证删除结果
+        assertFalse(tree.search(5));
+        assertTrue(tree.search(3));
+        assertTrue(tree.search(10));
+        assertTrue(tree.search(20));
+        assertTrue(tree.isAVLTree()); // 确保树仍然是AVL树
+    }
+
+    @Test
+    public void testDeleteNodeWithTwoChildren() {
+        AVLTree<Integer> tree = new AVLTree<>();
+        tree.insert(10);
+        tree.insert(20);
+        tree.insert(5);
+        tree.insert(15);
+        tree.insert(25);
+
+        // 删除有两个子节点的节点
+        tree.delete(20);
+
+        // 验证删除结果
+        assertFalse(tree.search(20));
+        assertTrue(tree.search(10));
+        assertTrue(tree.search(5));
+        assertTrue(tree.search(15));
+        assertTrue(tree.search(25));
+        assertTrue(tree.isAVLTree()); // 确保树仍然是AVL树
+    }
+
+    @Test
+    public void testDeleteCausingLeftLeftRotation() {
+        AVLTree<Integer> tree = new AVLTree<>();
+        tree.insert(30);
+        tree.insert(20);
+        tree.insert(40);
+        tree.insert(10);
+
+        // 删除 40 后会触发左左旋转
+        tree.delete(40);
+
+        // 验证删除结果和树结构
+        assertFalse(tree.search(40));
+        assertTrue(tree.search(30));
+        assertTrue(tree.search(20));
+        assertTrue(tree.search(10));
+        assertTrue(tree.isAVLTree());
+    }
+
+    @Test
+    public void testDeleteCausingLeftRightRotation() {
+        AVLTree<Integer> tree = new AVLTree<>();
+        tree.insert(30);
+        tree.insert(10);
+        tree.insert(40);
+        tree.insert(20);
+
+        // 删除 40 后会触发左右旋转
+        tree.delete(40);
+
+        // 验证删除结果和树结构
+        assertFalse(tree.search(40));
+        assertTrue(tree.search(30));
+        assertTrue(tree.search(10));
+        assertTrue(tree.search(20));
+        assertTrue(tree.isAVLTree());
+    }
+
+    @Test
+    public void testDeleteCausingRightRightRotation() {
+        AVLTree<Integer> tree = new AVLTree<>();
+        tree.insert(10);
+        tree.insert(5);
+        tree.insert(20);
+        tree.insert(30);
+
+        // 删除 5 后会触发右右旋转
+        tree.delete(5);
+
+        // 验证删除结果和树结构
+        assertFalse(tree.search(5));
+        assertTrue(tree.search(10));
+        assertTrue(tree.search(20));
+        assertTrue(tree.search(30));
+        assertTrue(tree.isAVLTree());
+    }
+
+    @Test
+    public void testDeleteCausingRightLeftRotation() {
+        AVLTree<Integer> tree = new AVLTree<>();
+        tree.insert(10);
+        tree.insert(5);
+        tree.insert(30);
+        tree.insert(20);
+
+        // 删除 5 后会触发右左旋转
+        tree.delete(5);
+
+        // 验证删除结果和树结构
+        assertFalse(tree.search(5));
+        assertTrue(tree.search(10));
+        assertTrue(tree.search(30));
+        assertTrue(tree.search(20));
+        assertTrue(tree.isAVLTree());
+    }
+
+    @Test
+    public void testDeleteRootNode() {
+        AVLTree<Integer> tree = new AVLTree<>();
+        tree.insert(10);
+        tree.insert(20);
+        tree.insert(5);
+
+        // 删除根节点
+        tree.delete(10);
+
+        // 验证删除结果
+        assertFalse(tree.search(10));
+        assertTrue(tree.search(5));
+        assertTrue(tree.search(20));
+        assertTrue(tree.isAVLTree()); // 确保树仍然是AVL树
+    }
+
+    @Test
+    public void testDeleteLargeNumberOfNodes() {
+        AVLTree<Integer> tree = new AVLTree<>();
+        for (int i = 1; i <= 100; i++) {
+            tree.insert(i);
+        }
+
+        // 删除一半的节点
+        for (int i = 1; i <= 50; i++) {
+            tree.delete(i);
+        }
+
+        // 验证删除结果
+        for (int i = 1; i <= 50; i++) {
+            assertFalse(tree.search(i)); // 确保已删除的节点不存在
+        }
+        for (int i = 51; i <= 100; i++) {
+            assertTrue(tree.search(i)); // 确保剩余节点仍然存在
+        }
+        assertTrue(tree.isAVLTree()); // 确保树仍然是AVL树
+    }
 }

@@ -65,6 +65,43 @@ public class AVLTree<T extends Comparable<T>> extends BST<T> {
         return balance(node);
     }
 
+    @Override
+    public void delete(T value) {
+        root = deleteRecursive((Node<T>) root, value);
+    }
+
+    private Node<T> deleteRecursive(Node<T> node, T value) {
+        if (node == null) {
+            return null;
+        }
+        if (less_than(node.value, value)) {
+            node.right = deleteRecursive(node.getCastRight(), value);
+        } else if (less_than(value, node.value)) {
+            node.left = deleteRecursive(node.getCastLeft(), value);
+        } else {
+            if (node.left == null) {
+                node = node.getCastRight();
+            } else if (node.right == null) {
+                node = node.getCastLeft();
+            } else {
+                node.value = findMin(node.getCastRight());
+                node.right = deleteRecursive(node.getCastRight(), node.value);
+            }
+        }
+        if (node != null) {
+            node.updateHeightAndBalanceFactor();
+            return balance(node);
+        }
+        return null;
+    }
+
+    private T findMin(Node<T> node) {
+        if (node.left == null) {
+            return node.value;
+        }
+        return findMin(node.getCastLeft());
+    }
+
     private Node<T> balance(Node<T> node) {
         if (node.balance_factor == -2) {
             if (node.getLeftBalanceFactor() == -1) {
