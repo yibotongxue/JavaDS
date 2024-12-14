@@ -24,6 +24,8 @@ public class BST<T extends Comparable<T>> {
         public Node<T> getRight() {
             return right;
         }
+
+        protected void updateStatus() {}
     }
 
     public BST() {
@@ -34,16 +36,17 @@ public class BST<T extends Comparable<T>> {
         root = insertRecursive(root, value);
     }
 
-    private Node<T> insertRecursive(Node<T> node, T value) {
+    protected Node<T> insertRecursive(Node<T> node, T value) {
         if (node == null) {
-            return new Node<>(value);
+            return createNewNode(value);
         }
         if (less_than(node.value, value)) {
             node.right = insertRecursive(node.right, value);
         } else if (less_than(value, node.value)) {
             node.left = insertRecursive(node.left, value);
         }
-        return node;
+        node.updateStatus();
+        return updateStructure(node);
     }
 
     public void delete(T value) {
@@ -68,14 +71,22 @@ public class BST<T extends Comparable<T>> {
                 node.right = deleteRecursive(node.right, node.value);
             }
         }
-        return node;
+        if (node != null) {
+            node.updateStatus();
+            return updateStructure(node);
+        }
+        return null;
     }
 
-    private T findMin(Node<T> node) {
+    protected T findMin(Node<T> node) {
         if (node.left == null) {
             return node.value;
         }
         return findMin(node.left);
+    }
+
+    protected Node<T> updateStructure(Node<T> node) {
+        return node;
     }
 
     public boolean search(T value) {
@@ -94,7 +105,43 @@ public class BST<T extends Comparable<T>> {
         return node.value.equals(value);
     }
 
+    // for LL
+    protected Node<T> rotateRight(Node<T> node) {
+        Node<T> left_child = node.left;
+        Node<T> temp = left_child.right;
+        left_child.right = node;
+        node.left = temp;
+        node.updateStatus();
+        left_child.updateStatus();
+        return left_child;
+    }
+
+    // for RR
+    protected Node<T> rotateLeft(Node<T> node) {
+        Node<T> right_child = node.right;
+        Node<T> temp = right_child.left;
+        right_child.left = node;
+        node.right = temp;
+        node.updateStatus();
+        right_child.updateStatus();
+        return right_child;
+    }
+
+    protected BST.Node<T> leftRightRotate(BST.Node<T> node) {
+        node.right = rotateRight(node.right);
+        return rotateLeft(node);
+    }
+
+    protected BST.Node<T> rightLeftRotate(BST.Node<T> node) {
+        node.left = rotateLeft(node.left);
+        return rotateRight(node);
+    }
+
     protected boolean less_than(T lhs, T rhs) {
         return lhs.compareTo(rhs) < 0;
+    }
+
+    protected Node<T> createNewNode(T value) {
+        return new Node<>(value);
     }
 }

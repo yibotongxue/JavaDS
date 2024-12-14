@@ -41,116 +41,30 @@ public class AVLTree<T extends Comparable<T>> extends BST<T> {
             return getCastRight().balance_factor;
         }
 
-        void updateHeightAndBalanceFactor() {
+        @Override
+        public void updateStatus() {
             height = Math.max(getLeftHeight(), getRightHeight()) + 1;
             balance_factor = getRightHeight() - getLeftHeight();
         }
     }
 
     @Override
-    public void insert(T value) {
-        root = insertRecursive((Node<T>) root, value);
-    }
-
-    private Node<T> insertRecursive(Node<T> node, T value) {
-        if (node == null) {
-            return new Node<>(value);
-        }
-        if (less_than(node.value, value)) {
-            node.right = insertRecursive(node.getCastRight(), value);
-        } else if (less_than(value, node.value)) {
-            node.left = insertRecursive(node.getCastLeft(), value);
-        }
-        node.updateHeightAndBalanceFactor();
-        return balance(node);
-    }
-
-    @Override
-    public void delete(T value) {
-        root = deleteRecursive((Node<T>) root, value);
-    }
-
-    private Node<T> deleteRecursive(Node<T> node, T value) {
-        if (node == null) {
-            return null;
-        }
-        if (less_than(node.value, value)) {
-            node.right = deleteRecursive(node.getCastRight(), value);
-        } else if (less_than(value, node.value)) {
-            node.left = deleteRecursive(node.getCastLeft(), value);
-        } else {
-            if (node.left == null) {
-                node = node.getCastRight();
-            } else if (node.right == null) {
-                node = node.getCastLeft();
+    protected BST.Node<T> updateStructure(BST.Node<T> node) {
+        Node<T> cast_node = (Node<T>) node;
+        if (cast_node.balance_factor == -2) {
+            if (cast_node.getLeftBalanceFactor() == -1) {
+                node = rotateRight(node);
             } else {
-                node.value = findMin(node.getCastRight());
-                node.right = deleteRecursive(node.getCastRight(), node.value);
+                node = rightLeftRotate(node);
             }
-        }
-        if (node != null) {
-            node.updateHeightAndBalanceFactor();
-            return balance(node);
-        }
-        return null;
-    }
-
-    private T findMin(Node<T> node) {
-        if (node.left == null) {
-            return node.value;
-        }
-        return findMin(node.getCastLeft());
-    }
-
-    private Node<T> balance(Node<T> node) {
-        if (node.balance_factor == -2) {
-            if (node.getLeftBalanceFactor() == -1) {
-                node = singleRotateLeft(node);
+        } else if (cast_node.balance_factor == 2) {
+            if (cast_node.getRightBalanceFactor() == 1) {
+                node = rotateLeft(node);
             } else {
-                node = doubleRotateLeft(node);
-            }
-        } else if (node.balance_factor == 2) {
-            if (node.getRightBalanceFactor() == 1) {
-                node = singleRotateRight(node);
-            } else {
-                node = doubleRotateRight(node);
+                node = leftRightRotate(node);
             }
         }
         return node;
-    }
-
-    // for LL
-    private Node<T> singleRotateLeft(Node<T> node) {
-        Node<T> left_child = node.getCastLeft();
-        Node<T> temp = left_child.getCastRight();
-        left_child.right = node;
-        node.left = temp;
-        node.updateHeightAndBalanceFactor();
-        left_child.updateHeightAndBalanceFactor();
-        return left_child;
-    }
-
-    // for RR
-    private Node<T> singleRotateRight(Node<T> node) {
-        Node<T> right_child = node.getCastRight();
-        Node<T> temp = right_child.getCastLeft();
-        right_child.left = node;
-        node.right = temp;
-        node.updateHeightAndBalanceFactor();
-        right_child.updateHeightAndBalanceFactor();
-        return right_child;
-    }
-
-    // for RL
-    private Node<T> doubleRotateRight(Node<T> node) {
-        node.right = singleRotateLeft(node.getCastRight());
-        return singleRotateRight(node);
-    }
-
-    // for LR
-    private Node<T> doubleRotateLeft(Node<T> node) {
-        node.left = singleRotateRight(node.getCastLeft());
-        return singleRotateLeft(node);
     }
 
     // 判断树是否是 AVL 树
@@ -177,5 +91,10 @@ public class AVLTree<T extends Comparable<T>> extends BST<T> {
 
         // 返回当前节点的高度
         return node.height;
+    }
+
+    @Override
+    protected BST.Node<T> createNewNode(T value) {
+        return new Node<>(value);
     }
 }
