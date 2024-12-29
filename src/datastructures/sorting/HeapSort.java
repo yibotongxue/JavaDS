@@ -1,15 +1,13 @@
 package datastructures.sorting;
 
-import java.util.Collections;
-import java.util.PriorityQueue;
+import datastructures.container.MaxHeap;
+
 
 public class HeapSort {
-    // TODO Should implement the max heap manually.
     public static <T extends Comparable<T>> void sort(T[] array) {
-        PriorityQueue<T> heap = new PriorityQueue<>(Collections.reverseOrder());
-        Collections.addAll(heap, array);
+        MaxHeap<T> heap = new MaxHeap<>(array);
         for (int i = array.length - 1; i >= 0; i--) {
-            array[i] = heap.poll();
+            array[i] = heap.pop();
         }
     }
 }
