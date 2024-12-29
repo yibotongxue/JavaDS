@@ -9,11 +9,11 @@ public class MinHeapTest {
     public void testAddAndSize() {
         MinHeap<Integer> heap = new MinHeap<>(10);
         heap.add(10);
-        assertEquals(1, heap.getSize());
+        assertEquals(1, heap.getHeapSize());
         heap.add(5);
-        assertEquals(2, heap.getSize());
+        assertEquals(2, heap.getHeapSize());
         heap.add(20);
-        assertEquals(3, heap.getSize());
+        assertEquals(3, heap.getHeapSize());
     }
 
     @Test
@@ -24,23 +24,11 @@ public class MinHeapTest {
         heap.add(20);
 
         assertEquals(5, heap.poll());  // 最小的元素应该是 5
-        assertEquals(2, heap.getSize());
+        assertEquals(2, heap.getHeapSize());
         assertEquals(10, heap.poll());  // 下一个最小的元素应该是 10
-        assertEquals(1, heap.getSize());
+        assertEquals(1, heap.getHeapSize());
         assertEquals(20, heap.poll());  // 剩下的元素应该是 20
         assertTrue(heap.isEmpty());     // 堆应该是空的
-    }
-
-    @Test
-    public void testReplaceInsert() {
-        MinHeap<Integer> heap = new MinHeap<>(10);
-        heap.add(10);
-        heap.add(5);
-        heap.add(20);
-
-        assertEquals(5, heap.replace(3));  // 堆顶元素 5 被 8 替换
-        assertEquals(3, heap.getSize());
-        assertEquals(3, heap.poll());  // 替换后的堆顶应该是 8
     }
 
     @Test
@@ -50,9 +38,21 @@ public class MinHeapTest {
         heap.add(5);
         heap.add(20);
 
-        assertEquals(5, heap.replace(8));  // 堆顶元素 5 被 8 替换
-        assertEquals(2, heap.getSize());
+        assertEquals(5, heap.replace(3));  // 堆顶元素 5 被 8 替换
+        assertEquals(2, heap.getHeapSize());
         assertEquals(10, heap.poll());  // 替换后的堆顶应该是 8
+    }
+
+    @Test
+    public void testReplaceInsert() {
+        MinHeap<Integer> heap = new MinHeap<>(10);
+        heap.add(10);
+        heap.add(5);
+        heap.add(20);
+
+        assertEquals(5, heap.replace(8));  // 堆顶元素 5 被 8 替换
+        assertEquals(3, heap.getHeapSize());
+        assertEquals(8, heap.poll());  // 替换后的堆顶应该是 8
     }
 
     @Test

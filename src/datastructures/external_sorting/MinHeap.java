@@ -6,32 +6,35 @@ import java.util.Collections;
 class MinHeap<T extends Comparable<T>> {
     private final ArrayList<T> data;
     int capacity;
-    int size;
+    int heapSize;
+    int totalSize;
 
     MinHeap(int capacity) {
         data = new ArrayList<>(Collections.nCopies(capacity, null));
         this.capacity = capacity;
-        size = 0;
+        heapSize = 0;
+        totalSize = 0;
     }
 
     void add(T value) {
-        if (size == capacity) {
+        if (heapSize == capacity) {
             throw new IndexOutOfBoundsException("Can't add an element to a full heap.");
         }
-        data.set(size, value);
-        size++;
-        swimUp(size - 1);
+        data.set(heapSize, value);
+        heapSize++;
+        totalSize++;
+        swimUp(heapSize - 1);
     }
 
     T replace(T value) {
-        if (size == 0) {
+        if (heapSize == 0) {
             throw new IndexOutOfBoundsException("Can't replace a empty heap.");
         }
         T result = data.getFirst();
-        if (less(result, value)) {
-            data.set(0, data.get(size - 1));
-            data.set(size - 1, value);
-            size--;
+        if (less(value, result)) {
+            data.set(0, data.get(heapSize - 1));
+            data.set(heapSize - 1, value);
+            heapSize--;
         } else {
             data.set(0, value);
         }
@@ -40,27 +43,39 @@ class MinHeap<T extends Comparable<T>> {
     }
 
     T poll() {
-        if (size == 0) {
+        if (heapSize == 0) {
             throw new IndexOutOfBoundsException("Can't poll form an empty heap.");
         }
         T result = data.getFirst();
-        data.set(0, data.get(size - 1));
-        data.set(size - 1, null);
-        size--;
+        data.set(0, data.get(heapSize - 1));
+        data.set(heapSize - 1, null);
+        heapSize--;
+        totalSize--;
         sinkDown(0);
         return result;
     }
 
-    int getSize() {
-        return size;
+    int getHeapSize() {
+        return heapSize;
     }
 
     boolean isEmpty() {
-        return size == 0;
+        return heapSize == 0;
     }
 
     boolean isFull() {
-        return size == capacity;
+        return heapSize == capacity;
+    }
+
+    void clear() {
+        heapSize = 0;
+    }
+
+    void reBuild() {
+        heapSize = totalSize;
+        for (int i = heapSize / 2 - 1; i >= 0; i--) {
+            sinkDown(i);
+        }
     }
 
     private void swimUp(int i) {
@@ -77,10 +92,10 @@ class MinHeap<T extends Comparable<T>> {
     private void sinkDown(int i) {
         int left_child = i * 2 + 1;
         int right_child = i * 2 + 2;
-        if (left_child >= size) {
+        if (left_child >= heapSize) {
             return;
         }
-        if (right_child >= size) {
+        if (right_child >= heapSize) {
             if (less(data.get(left_child), data.get(i))) {
                 swap(i, left_child);
                 sinkDown(left_child);
