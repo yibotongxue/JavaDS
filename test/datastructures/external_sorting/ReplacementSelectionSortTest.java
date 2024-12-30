@@ -42,10 +42,7 @@ class ReplacementSelectionSortTest {
         writeInputFile("10\n20\n5\n30\n15\n25\n");
 
         // 创建并运行排序算法
-        ReplacementSelectionSort sorter = new ReplacementSelectionSort(
-                inputFile.toString(), tempDir.toString(), 3
-        );
-        sorter.sort();
+        ReplacementSelectionSort.sort(inputFile.toString(), tempDir.toString(), 3);
 
         // 验证输出文件内容
         Path output1 = tempDir.resolve("1.txt");
@@ -61,10 +58,7 @@ class ReplacementSelectionSortTest {
         writeInputFile("");
 
         // 创建并运行排序算法
-        ReplacementSelectionSort sorter = new ReplacementSelectionSort(
-                inputFile.toString(), tempDir.toString(), 3
-        );
-        sorter.sort();
+        ReplacementSelectionSort.sort(inputFile.toString(), tempDir.toString(), 3);
 
         // 验证没有输出文件
         assertEquals(1, Files.list(tempDir).filter(Files::isRegularFile).count());
@@ -76,10 +70,7 @@ class ReplacementSelectionSortTest {
         writeInputFile("10\n20\n");
 
         // 创建并运行排序算法
-        ReplacementSelectionSort sorter = new ReplacementSelectionSort(
-                inputFile.toString(), tempDir.toString(), 5
-        );
-        sorter.sort();
+        ReplacementSelectionSort.sort(inputFile.toString(), tempDir.toString(), 5);
 
         // 验证输出文件内容
         Path output1 = tempDir.resolve("1.txt");
@@ -92,7 +83,7 @@ class ReplacementSelectionSortTest {
     void testInvalidInputFilePath() {
         // 无效的输入文件路径
         assertThrows(IOException.class, () -> {
-            new ReplacementSelectionSort("invalid_path.txt", tempDir.toString(), 3).sort();
+            ReplacementSelectionSort.sort("invalid_path.txt", tempDir.toString(), 3);
         });
     }
 }

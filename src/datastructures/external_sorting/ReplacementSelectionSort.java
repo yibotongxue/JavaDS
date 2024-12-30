@@ -3,17 +3,9 @@ package datastructures.external_sorting;
 import java.io.*;
 
 public class ReplacementSelectionSort {
-    private final MinHeap<Integer> heap;
-    private final String inputFilePath;
-    private final String outputFileDir;
 
-    public ReplacementSelectionSort(String inputFilePath, String outputFileDir, int capacity) {
-        heap = new MinHeap<>(capacity);
-        this.inputFilePath = inputFilePath;
-        this.outputFileDir = outputFileDir;
-    }
-
-    public void sort() throws IOException {
+    public static void sort(String inputFilePath, String outputFileDir, int capacity) throws IOException {
+        var heap = new MinHeap<Integer>(capacity);
         BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
         int counter = 1;
         heap.clear();
