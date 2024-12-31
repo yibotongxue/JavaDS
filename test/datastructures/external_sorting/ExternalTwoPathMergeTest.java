@@ -1,5 +1,6 @@
 package datastructures.external_sorting;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +8,17 @@ import java.nio.file.Files;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ExternalTwoPathMergeTest {
+
+    @AfterEach
+    void tearDown() {
+        // 删除所有txt和txt1文件
+        File[] files = new File(".").listFiles((dir, name) -> name.endsWith(".txt") || name.endsWith(".txt1"));
+        if (files != null) {
+            for (File file : files) {
+                file.delete();
+            }
+        }
+    }
 
     @Test
     void mergeFiles_withValidFiles_shouldMergeCorrectly() throws IOException {
