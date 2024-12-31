@@ -60,6 +60,22 @@ public class MinHeapTest {
     }
 
     @Test
+    public void testHeapifyConstructorWithArray() {
+        Integer[] data = {10, 5, 20, 3, 15};
+        MinHeap<Integer> heap = new MinHeap<>(data);
+
+        // 验证堆的最小值
+        assertEquals(3, heap.getMin());
+
+        // 验证弹出的顺序是否正确
+        assertEquals(3, heap.pop());
+        assertEquals(5, heap.pop());
+        assertEquals(10, heap.pop());
+        assertEquals(15, heap.pop());
+        assertEquals(20, heap.pop());
+    }
+
+    @Test
     public void testMinHeapWithStrings() {
         MinHeap<String> heap = new MinHeap<>();
         heap.push("apple");

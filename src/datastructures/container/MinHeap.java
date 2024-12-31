@@ -13,7 +13,7 @@ public class MinHeap<T extends Comparable<T>> {
 
     public MinHeap(List<T> list) {
         this.list = new ArrayList<>(list);
-        for (int i = this.list.size() - 1; i >= 0; i--) {
+        for (int i = this.list.size() / 2 - 1; i >= 0; i--) {
             ShiftDown(i);
         }
     }
@@ -21,7 +21,7 @@ public class MinHeap<T extends Comparable<T>> {
     public MinHeap(T[] list) {
         this.list = new ArrayList<>();
         Collections.addAll(this.list, list);
-        for (int i = this.list.size() - 1; i >= 0; i--) {
+        for (int i = this.list.size() / 2 - 1; i >= 0; i--) {
             ShiftDown(i);
         }
     }
