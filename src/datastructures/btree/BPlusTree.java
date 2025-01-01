@@ -27,6 +27,7 @@ public class BPlusTree<K extends Comparable<K>, V> {
         if (root.keys.size() > maxChildrenCount) {
             BPlusTreeNode<K, V> newRoot = new BPlusTreeNode<>(false);
             newRoot.children.add(root);
+            newRoot.keys.add(root.keys.getLast());
             splitChild(newRoot, 0);
             root = newRoot;
         }
@@ -38,6 +39,10 @@ public class BPlusTree<K extends Comparable<K>, V> {
             node.keys.add(i, key);
             node.values.add(i, value);
         } else {
+            if (i >= node.children.size()) {
+                node.keys.set(i - 1, key);
+                i = node.children.size() - 1;
+            }
             insert(node.children.get(i), key, value);
             if (node.children.get(i).keys.size() > maxChildrenCount) {
                 splitChild(node, i);
