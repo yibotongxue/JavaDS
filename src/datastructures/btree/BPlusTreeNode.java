@@ -3,15 +3,20 @@ package datastructures.btree;
 import java.util.ArrayList;
 import java.util.List;
 
-class BTreeNode<K extends Comparable<K>> {
+class BPlusTreeNode<K extends Comparable<K>, V> {
     boolean isLeaf;
     List<K> keys;
-    List<BTreeNode<K>> children;
+    List<V> values;  // Only leaf nodes have values
+    List<BPlusTreeNode<K, V>> children;  // Non-leaf nodes have children
+    BPlusTreeNode<K, V> next;
 
-    BTreeNode(boolean isLeaf) {
+    BPlusTreeNode(boolean isLeaf) {
         this.isLeaf = isLeaf;
         keys = new ArrayList<>();
-        if (!isLeaf) {
+        if (isLeaf) {
+            values = new ArrayList<>();
+            next = null;
+        } else {
             children = new ArrayList<>();
         }
     }
