@@ -1,16 +1,21 @@
 package datastructures.external_sorting;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
+/**
+ * A min heap implementation for external sorting. I make it
+ * package-private to avoid exposing it to the user for I think
+ * it's not necessary to be used outside the package.
+ *
+ * @param <T> The type of the elements in the heap.
+ */
 class MinHeap<T extends Comparable<T>> {
-    private final ArrayList<T> data;
+    private final T[] data;
     private final int capacity;
     private int heapSize;
     private int totalSize;
 
     MinHeap(int capacity) {
-        data = new ArrayList<>(Collections.nCopies(capacity, null));
+        //noinspection unchecked
+        data = (T[]) new Comparable[capacity];
         this.capacity = capacity;
         heapSize = 0;
         totalSize = 0;
@@ -24,7 +29,7 @@ class MinHeap<T extends Comparable<T>> {
         if (heapSize == capacity) {
             throw new IndexOutOfBoundsException("Can't add an element to a full heap.");
         }
-        data.set(heapSize, value);
+        data[heapSize] = value;
         heapSize++;
         totalSize++;
         swimUp(heapSize - 1);
@@ -39,13 +44,13 @@ class MinHeap<T extends Comparable<T>> {
         if (heapSize == 0) {
             throw new IndexOutOfBoundsException("Can't replace a empty heap.");
         }
-        T result = data.getFirst();
+        T result = data[0];
         if (less(value, result)) {
-            data.set(0, data.get(heapSize - 1));
-            data.set(heapSize - 1, value);
+            data[0] = data[heapSize - 1];
+            data[heapSize - 1] = value;
             heapSize--;
         } else {
-            data.set(0, value);
+            data[0] = value;
         }
         sinkDown(0);
         return result;
@@ -59,9 +64,9 @@ class MinHeap<T extends Comparable<T>> {
         if (heapSize == 0) {
             throw new IndexOutOfBoundsException("Can't poll form an empty heap.");
         }
-        T result = data.getFirst();
-        data.set(0, data.get(heapSize - 1));
-        data.set(heapSize - 1, null);
+        T result = data[0];
+        data[0] = data[heapSize - 1];
+        data[heapSize - 1] = null;
         heapSize--;
         totalSize--;
         sinkDown(0);
@@ -108,7 +113,7 @@ class MinHeap<T extends Comparable<T>> {
             return;
         }
         int parent = (i - 1) / 2;
-        if (less(data.get(i), data.get(parent))) {
+        if (less(data[i], data[parent])) {
             swap(i, parent);
             swimUp(parent);
         }
@@ -125,18 +130,18 @@ class MinHeap<T extends Comparable<T>> {
             return;
         }
         if (right_child >= heapSize) {
-            if (less(data.get(left_child), data.get(i))) {
+            if (less(data[left_child], data[i])) {
                 swap(i, left_child);
                 sinkDown(left_child);
             }
             return;
         }
-        if (less(data.get(left_child), data.get(right_child))) {
-            if (less(data.get(left_child), data.get(i))) {
+        if (less(data[left_child], data[right_child])) {
+            if (less(data[left_child], data[i])) {
                 swap(left_child, i);
                 sinkDown(left_child);
             }
-        } else if (less(data.get(right_child), data.get(i))) {
+        } else if (less(data[right_child], data[i])) {
             swap(right_child, i);
             sinkDown(right_child);
         }
@@ -147,8 +152,8 @@ class MinHeap<T extends Comparable<T>> {
     }
 
     private void swap(int i, int j) {
-        T temp = data.get(i);
-        data.set(i, data.get(j));
-        data.set(j, temp);
+        T temp = data[i];
+        data[i] = data[j];
+        data[j] = temp;
     }
 }
