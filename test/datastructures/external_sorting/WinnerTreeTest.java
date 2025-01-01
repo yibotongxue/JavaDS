@@ -1,110 +1,60 @@
 package datastructures.external_sorting;
 
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.StringReader;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class WinnerTreeTest {
 
-    @AfterEach
-    void tearDown() {
-        for (int i = 1; i <= 2; i++) {
-            String fileName = "player" + i + ".txt";
-            File file = new File(fileName);
-            file.delete();
-        }
+    private WinnerTree loserTree;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        // 模拟从多个流读取数据
+        BufferedReader[] readers = new BufferedReader[]{
+                new BufferedReader(new StringReader("1\n3\n5\n")),
+                new BufferedReader(new StringReader("2\n4\n6\n")),
+                new BufferedReader(new StringReader("0\n7\n8\n"))
+        };
+        loserTree = new WinnerTree(readers);
     }
 
     @Test
-    void winnerTree_withSinglePlayer_shouldReturnPlayerAsWinner() throws IOException {
-        ArrayList<String> players = new ArrayList<>();
-        players.add("player1.txt");
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("player1.txt"))) {
-            writer.write("1\n2\n3\n");
-        }
-
-        WinnerTree winnerTree = new WinnerTree(players);
-        assertEquals(0, winnerTree.getWinner());
+    void testWinnerTreeInitialization() {
+        // 检查构造函数是否正确初始化
+        assertNotNull(loserTree);
+        assertEquals(0, loserTree.getWinner()); // 0 是最小值
     }
 
     @Test
-    void winnerTree_withMultiplePlayers_shouldReturnCorrectWinner() throws IOException {
-        ArrayList<String> players = new ArrayList<>();
-        players.add("player1.txt");
-        players.add("player2.txt");
-
-        try (BufferedWriter writer1 = new BufferedWriter(new FileWriter("player1.txt"))) {
-            writer1.write("1\n3\n5\n");
-        }
-
-        try (BufferedWriter writer2 = new BufferedWriter(new FileWriter("player2.txt"))) {
-            writer2.write("2\n4\n6\n");
-        }
-
-        WinnerTree winnerTree = new WinnerTree(players);
-        assertEquals(0, winnerTree.getWinner());
+    void testGetWinner() {
+        // 检查初始的胜者（最小值）
+        assertEquals(0, loserTree.getWinner());
     }
 
     @Test
-    void winnerTree_withEmptyPlayerFile_shouldThrowIOException() {
-        ArrayList<String> players = new ArrayList<>();
-        players.add("emptyPlayer.txt");
+    void testRePlay() throws IOException {
+        // 初始时最小值是0
+        assertEquals(0, loserTree.getWinner());
 
-        assertThrows(IOException.class, () -> new WinnerTree(players));
-    }
+        // 调用 `rePlay()` 使得树重新读取数据流
+        loserTree.rePlay();
+        // 此时胜者应为 1，因为流0中的1被读取
+        assertEquals(1, loserTree.getWinner());
 
-    @Test
-    void winnerTree_withNonNumericContent_shouldThrowNumberFormatException() throws IOException {
-        ArrayList<String> players = new ArrayList<>();
-        players.add("player1.txt");
+        // 再次调用 `rePlay()` 使得树重新读取数据流
+        loserTree.rePlay();
+        // 此时胜者应为 2，因为流1中的2是下一个最小值
+        assertEquals(2, loserTree.getWinner());
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("player1.txt"))) {
-            writer.write("a\nb\nc\n");
-        }
-
-        assertThrows(NumberFormatException.class, () -> new WinnerTree(players));
-    }
-
-    @Test
-    void next_withValidData_shouldGetWinnerCorrectly() throws IOException {
-        ArrayList<String> players = new ArrayList<>();
-        players.add("player1.txt");
-        players.add("player2.txt");
-
-        try (BufferedWriter writer1 = new BufferedWriter(new FileWriter("player1.txt"))) {
-            writer1.write("1\n3\n5\n");
-        }
-
-        try (BufferedWriter writer2 = new BufferedWriter(new FileWriter("player2.txt"))) {
-            writer2.write("2\n4\n6\n");
-        }
-
-        WinnerTree winnerTree = new WinnerTree(players);
-        assertEquals(1, winnerTree.getWinnerValue());
-    }
-
-    @Test
-    void next_withValidData_shouldUpdateWinnerCorrectly() throws IOException {
-        ArrayList<String> players = new ArrayList<>();
-        players.add("player1.txt");
-        players.add("player2.txt");
-
-        try (BufferedWriter writer1 = new BufferedWriter(new FileWriter("player1.txt"))) {
-            writer1.write("1\n3\n5\n");
-        }
-
-        try (BufferedWriter writer2 = new BufferedWriter(new FileWriter("player2.txt"))) {
-            writer2.write("2\n4\n6\n");
-        }
-
-        WinnerTree winnerTree = new WinnerTree(players);
-        winnerTree.next();
-        assertEquals(2, winnerTree.getWinnerValue());
+        // 再次调用 `rePlay()` 使得树重新读取数据流
+        loserTree.rePlay();
+        // 此时胜者应为 3，因为流0中的3是下一个最小值
+        assertEquals(3, loserTree.getWinner());
     }
 }

@@ -9,7 +9,7 @@ import java.util.PriorityQueue;
 import java.util.logging.Logger;
 
 public class ExternalTwoPathMerge {
-    public static void Sort(String[] inputFiles, String outputFile) {
+    public static void merge(String[] inputFiles, String outputFile) {
         if (inputFiles.length == 1) {
             File input = new File(inputFiles[0]);
             File output = new File(outputFile);
@@ -26,7 +26,7 @@ public class ExternalTwoPathMerge {
         while (pq.size() > 1) {
             File file1 = pq.poll();
             File file2 = pq.poll();
-            File outputFile1 = new File(outputFile + "1");
+            File outputFile1 = new File(outputFile + "tempForMerge");
             try {
                 assert file2 != null;
                 mergeFiles(file1, file2, outputFile1);

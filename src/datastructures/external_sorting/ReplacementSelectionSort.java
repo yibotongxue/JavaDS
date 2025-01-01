@@ -5,10 +5,9 @@ import java.io.*;
 public class ReplacementSelectionSort {
 
     public static void sort(String inputFilePath, String outputFileDir, int capacity) throws IOException {
-        var heap = new MinHeap<Integer>(capacity);
+        MinHeap<Integer> heap = new MinHeap<>(capacity);
         BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
         int counter = 1;
-        heap.clear();
         while (!heap.isFull()) {
             String line = reader.readLine();
             if (line == null) {

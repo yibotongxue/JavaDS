@@ -5,9 +5,9 @@ import java.util.Collections;
 
 class MinHeap<T extends Comparable<T>> {
     private final ArrayList<T> data;
-    int capacity;
-    int heapSize;
-    int totalSize;
+    private final int capacity;
+    private int heapSize;
+    private int totalSize;
 
     MinHeap(int capacity) {
         data = new ArrayList<>(Collections.nCopies(capacity, null));
@@ -16,6 +16,10 @@ class MinHeap<T extends Comparable<T>> {
         totalSize = 0;
     }
 
+    /**
+     * Add a value to the heap.
+     * @param value The value to be added.
+     */
     void add(T value) {
         if (heapSize == capacity) {
             throw new IndexOutOfBoundsException("Can't add an element to a full heap.");
@@ -26,6 +30,11 @@ class MinHeap<T extends Comparable<T>> {
         swimUp(heapSize - 1);
     }
 
+    /**
+     * Replace the root of the heap with a new value.
+     * @param value The new value to replace the root.
+     * @return The old root value.
+     */
     T replace(T value) {
         if (heapSize == 0) {
             throw new IndexOutOfBoundsException("Can't replace a empty heap.");
@@ -42,6 +51,10 @@ class MinHeap<T extends Comparable<T>> {
         return result;
     }
 
+    /**
+     * Get the root value of the heap.
+     * @return The root value.
+     */
     T poll() {
         if (heapSize == 0) {
             throw new IndexOutOfBoundsException("Can't poll form an empty heap.");
@@ -59,18 +72,25 @@ class MinHeap<T extends Comparable<T>> {
         return heapSize;
     }
 
+    /**
+     * Check if the heap is empty.
+     * @return True if the heap is empty, false otherwise.
+     */
     boolean isEmpty() {
         return heapSize == 0;
     }
 
+    /**
+     * Check if the heap is full.
+     * @return True if the heap is full, false otherwise.
+     */
     boolean isFull() {
         return heapSize == capacity;
     }
 
-    void clear() {
-        heapSize = 0;
-    }
-
+    /**
+     * Rebuild the heap.
+     */
     void reBuild() {
         heapSize = totalSize;
         for (int i = heapSize / 2 - 1; i >= 0; i--) {
@@ -78,6 +98,11 @@ class MinHeap<T extends Comparable<T>> {
         }
     }
 
+    /**
+     * Get the root value of the heap.
+     *
+     * @param i The index of the value to swim up.
+     */
     private void swimUp(int i) {
         if (i == 0) {
             return;
@@ -89,6 +114,10 @@ class MinHeap<T extends Comparable<T>> {
         }
     }
 
+    /**
+     * Sink down the value at index i.
+     * @param i The index of the value to sink down.
+     */
     private void sinkDown(int i) {
         int left_child = i * 2 + 1;
         int right_child = i * 2 + 2;

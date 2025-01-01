@@ -45,10 +45,7 @@ public class LoserTree {
     }
 
     public void rePlay() throws IOException {
-        reFetchData(tree[0]);
-    }
-
-    private void reFetchData(int index) throws IOException {
+        int index = tree[0];
         String line = readers[index].readLine();
         currentValues[index] = line == null ? Integer.MAX_VALUE : Integer.parseInt(line);
         int n = currentValues.length;

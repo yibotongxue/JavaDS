@@ -12,7 +12,7 @@ class ExternalTwoPathMergeTest {
     @AfterEach
     void tearDown() {
         // 删除所有txt和txt1文件
-        File[] files = new File(".").listFiles((dir, name) -> name.endsWith(".txt") || name.endsWith(".txt1"));
+        File[] files = new File(".").listFiles((_, name) -> name.endsWith(".txt") || name.endsWith(".txt1"));
         if (files != null) {
             for (File file : files) {
                 file.delete();
@@ -97,13 +97,13 @@ class ExternalTwoPathMergeTest {
     }
 
     @Test
-    void sort_withSingleInputFile_shouldCopyFile() throws IOException {
+    void merge_withSingleInputFile_shouldCopyFile() throws IOException {
         String[] inputFiles = {"input1.txt"};
         String outputFile = "output.txt";
 
         Files.write(new File(inputFiles[0]).toPath(), "1\n2\n3\n".getBytes());
 
-        ExternalTwoPathMerge.Sort(inputFiles, outputFile);
+        ExternalTwoPathMerge.merge(inputFiles, outputFile);
 
         String expected = "1\n2\n3\n";
         String actual = Files.readString(new File(outputFile).toPath());
@@ -111,14 +111,14 @@ class ExternalTwoPathMergeTest {
     }
 
     @Test
-    void sort_withMultipleInputFiles_shouldMergeCorrectly() throws IOException {
+    void merge_withMultipleInputFiles_shouldMergeCorrectly() throws IOException {
         String[] inputFiles = {"input1.txt", "input2.txt"};
         String outputFile = "output.txt";
 
         Files.write(new File(inputFiles[0]).toPath(), "1\n3\n5\n".getBytes());
         Files.write(new File(inputFiles[1]).toPath(), "2\n4\n6\n".getBytes());
 
-        ExternalTwoPathMerge.Sort(inputFiles, outputFile);
+        ExternalTwoPathMerge.merge(inputFiles, outputFile);
 
         String expected = "1\n2\n3\n4\n5\n6\n";
         String actual = Files.readString(new File(outputFile).toPath());
@@ -126,14 +126,14 @@ class ExternalTwoPathMergeTest {
     }
 
     @Test
-    void sort_withEmptyInputFiles_shouldCreateEmptyOutput() throws IOException {
+    void merge_withEmptyInputFiles_shouldCreateEmptyOutput() throws IOException {
         String[] inputFiles = {"input1.txt", "input2.txt"};
         String outputFile = "output.txt";
 
         Files.write(new File(inputFiles[0]).toPath(), "".getBytes());
         Files.write(new File(inputFiles[1]).toPath(), "".getBytes());
 
-        ExternalTwoPathMerge.Sort(inputFiles, outputFile);
+        ExternalTwoPathMerge.merge(inputFiles, outputFile);
 
         String expected = "";
         String actual = Files.readString(new File(outputFile).toPath());
@@ -141,13 +141,13 @@ class ExternalTwoPathMergeTest {
     }
 
     @Test
-    void sort_withNonNumericContent_shouldThrowNumberFormatException() throws IOException {
+    void merge_withNonNumericContent_shouldThrowNumberFormatException() throws IOException {
         String[] inputFiles = {"input1.txt", "input2.txt"};
         String outputFile = "output.txt";
 
         Files.write(new File(inputFiles[0]).toPath(), "a\nb\nc\n".getBytes());
         Files.write(new File(inputFiles[1]).toPath(), "d\ne\nf\n".getBytes());
 
-        assertThrows(NumberFormatException.class, () -> ExternalTwoPathMerge.Sort(inputFiles, outputFile));
+        assertThrows(NumberFormatException.class, () -> ExternalTwoPathMerge.merge(inputFiles, outputFile));
     }
 }
