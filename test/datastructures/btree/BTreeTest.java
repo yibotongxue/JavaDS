@@ -96,4 +96,103 @@ class BTreeTest {
         bTree.insert(Integer.MIN_VALUE);
         assertTrue(bTree.search(Integer.MIN_VALUE), "BTree should contain the minimum integer value.");
     }
+
+    @Test
+    void testDeleteLeafNode() {
+        bTree.insert(10);
+        bTree.insert(20);
+        bTree.insert(30);
+
+        assertTrue(bTree.search(20), "BTree should contain 20 before deletion.");
+        bTree.delete(20); // 删除叶子节点
+        assertFalse(bTree.search(20), "BTree should not contain 20 after deletion.");
+    }
+
+    @Test
+    void testDeleteInternalNode() {
+        bTree.insert(10);
+        bTree.insert(20);
+        bTree.insert(30);
+        bTree.insert(40);
+        bTree.insert(50);
+
+        assertTrue(bTree.search(30), "BTree should contain 30 before deletion.");
+        bTree.delete(30); // 删除内部节点
+        assertFalse(bTree.search(30), "BTree should not contain 30 after deletion.");
+    }
+
+    @Test
+    void testDeleteRootNode() {
+        bTree.insert(10);
+        bTree.insert(20);
+        bTree.insert(30);
+
+        assertTrue(bTree.search(20), "BTree should contain 20 before deletion.");
+        bTree.delete(20); // 删除根节点
+        assertFalse(bTree.search(20), "BTree should not contain 20 after deletion.");
+
+        assertTrue(bTree.search(10), "BTree should still contain 10.");
+        assertTrue(bTree.search(30), "BTree should still contain 30.");
+    }
+
+    @Test
+    void testDeleteWithMerge() {
+        bTree.insert(10);
+        bTree.insert(20);
+        bTree.insert(30);
+        bTree.insert(40);
+        bTree.insert(50);
+
+        bTree.delete(30); // 删除节点以触发合并
+        assertFalse(bTree.search(30), "BTree should not contain 30 after deletion.");
+        assertTrue(bTree.search(10), "BTree should still contain 10.");
+        assertTrue(bTree.search(20), "BTree should still contain 20.");
+        assertTrue(bTree.search(40), "BTree should still contain 40.");
+        assertTrue(bTree.search(50), "BTree should still contain 50.");
+    }
+
+    @Test
+    void testDeleteNonExistentKey() {
+        bTree.insert(10);
+        bTree.insert(20);
+        bTree.insert(30);
+
+        bTree.delete(40); // 删除不存在的元素
+        assertTrue(bTree.search(10), "BTree should still contain 10.");
+        assertTrue(bTree.search(20), "BTree should still contain 20.");
+        assertTrue(bTree.search(30), "BTree should still contain 30.");
+    }
+
+    @Test
+    void testDeleteFromEmptyTree() {
+        assertDoesNotThrow(() -> bTree.delete(10), "Deleting from an empty tree should not throw an exception.");
+    }
+
+    @Test
+    void testDeleteSingleElementTree() {
+        bTree.insert(10);
+        assertTrue(bTree.search(10), "BTree should contain 10 before deletion.");
+        bTree.delete(10); // 删除唯一的元素
+        assertFalse(bTree.search(10), "BTree should not contain 10 after deletion.");
+    }
+
+    @Test
+    void testDeleteCausesHeightReduction() {
+        // 插入一组元素使树达到两层
+        bTree.insert(10);
+        bTree.insert(20);
+        bTree.insert(30);
+        bTree.insert(40);
+        bTree.insert(50);
+        bTree.insert(60);
+
+        assertTrue(bTree.search(30), "BTree should contain 30 before deletion.");
+        bTree.delete(30); // 删除节点，可能导致树高度减少
+        assertFalse(bTree.search(30), "BTree should not contain 30 after deletion.");
+        assertTrue(bTree.search(10), "BTree should still contain 10.");
+        assertTrue(bTree.search(20), "BTree should still contain 20.");
+        assertTrue(bTree.search(40), "BTree should still contain 40.");
+        assertTrue(bTree.search(50), "BTree should still contain 50.");
+        assertTrue(bTree.search(60), "BTree should still contain 60.");
+    }
 }
